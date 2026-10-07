@@ -1,18 +1,17 @@
 import { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 
+// หน้าเข้าสู่ระบบ
 function Login() {
-  const [email, setEmail] = useState('demo@moviehub.test');
-  const [password, setPassword] = useState('1234');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
   const [error, setError] = useState(null);
   const [status, setStatus] = useState('typing');
 
   const { login } = useAuth();
   const navigate = useNavigate();
-
-  const location = useLocation();
-  const from = location.state?.from || '/';
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -22,12 +21,18 @@ function Login() {
 
     try {
       await login(email, password);
-      navigate(from);
+
+      // Login สำเร็จ
+      navigate('/');
     } catch (err) {
-      setError(err.message);
+      // Login ไม่สำเร็จ
+      setError(err.message || 'เข้าสู่ระบบไม่สำเร็จ');
       setStatus('typing');
     }
   }
+
+  const input =
+    'w-full rounded-lg border border-slate-300 bg-white px-3 py-2 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-100';
 
   return (
     <div className="mx-auto max-w-sm px-4 py-12">
@@ -35,18 +40,17 @@ function Login() {
         เข้าสู่ระบบ
       </h1>
 
-      <p className="mt-1 text-sm text-slate-500">
-        ทดลองด้วย demo@moviehub.test / 1234 หรือสมัครใหม่
-      </p>
-
-      <form onSubmit={handleSubmit} className="mt-6 space-y-3">
+      <form
+        onSubmit={handleSubmit}
+        className="mt-6 space-y-3"
+      >
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="อีเมล"
           required
-          className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-100"
+          className={input}
         />
 
         <input
@@ -55,7 +59,8 @@ function Login() {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="รหัสผ่าน"
           required
-          className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-100"
+          minLength={4}
+          className={input}
         />
 
         <button
