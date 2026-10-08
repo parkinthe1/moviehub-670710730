@@ -7,13 +7,16 @@ import {
 
 const AuthContext = createContext(null);
 
+const TOKEN_KEY = 'moviehub.token';
+const MEMBER_KEY = 'moviehub.member';
+
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(
-    () => localStorage.getItem('moviehub_token')
+    () => localStorage.getItem(TOKEN_KEY)
   );
 
   const [member, setMember] = useState(() => {
-    const saved = localStorage.getItem('moviehub_member');
+    const saved = localStorage.getItem(MEMBER_KEY);
 
     try {
       return saved ? JSON.parse(saved) : null;
@@ -24,7 +27,6 @@ export function AuthProvider({ children }) {
 
   const [loading, setLoading] = useState(true);
 
-  // ตรวจสอบ token ที่เก็บไว้ตอนเปิดเว็บ
   useEffect(() => {
     async function checkLogin() {
       if (!token) {
@@ -34,13 +36,10 @@ export function AuthProvider({ children }) {
 
       try {
         const data = await getMe(token);
-
         setMember(data.member || data);
       } catch (err) {
-        // token ใช้ไม่ได้แล้ว
-        localStorage.removeItem('moviehub_token');
-        localStorage.removeItem('moviehub_member');
-
+        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem(MEMBER_KEY);
         setToken(null);
         setMember(null);
       } finally {
@@ -51,38 +50,26 @@ export function AuthProvider({ children }) {
     checkLogin();
   }, [token]);
 
-  // Login
   async function login(email, password) {
     const data = await loginApi(email, password);
 
     setToken(data.token);
     setMember(data.member);
 
-    localStorage.setItem('moviehub_token', data.token);
-    localStorage.setItem(
-      'moviehub_member',
-      JSON.stringify(data.member)
-    );
+    localStorage.setItem(TOKEN_KEY, data.token);
+    localStorage.setItem(MEMBER_KEY, JSON.stringify(data.member));
 
     return data;
   }
 
-  // Register
   async function register(email, password, displayName) {
-    const data = await registerApi(
-      email,
-      password,
-      displayName
-    );
-
+    const data = await registerApi(email, password, displayName);
     return data;
   }
 
-  // Logout
   function logout() {
-    localStorage.removeItem('moviehub_token');
-    localStorage.removeItem('moviehub_member');
-
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(MEMBER_KEY);
     setToken(null);
     setMember(null);
   }
