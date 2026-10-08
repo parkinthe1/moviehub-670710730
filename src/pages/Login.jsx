@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 
-// หน้าเข้าสู่ระบบ
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -12,6 +11,9 @@ function Login() {
 
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const from = location.state?.from || '/';
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -22,10 +24,8 @@ function Login() {
     try {
       await login(email, password);
 
-      // Login สำเร็จ
-      navigate('/');
+      navigate(from);
     } catch (err) {
-      // Login ไม่สำเร็จ
       setError(err.message || 'เข้าสู่ระบบไม่สำเร็จ');
       setStatus('typing');
     }
