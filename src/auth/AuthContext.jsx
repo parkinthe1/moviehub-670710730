@@ -85,16 +85,14 @@ export function AuthProvider({ children }) {
   //   register,
   //   logout
   // };
-  const value = {
-  token,
-  member,
-  loading,
-  isLoggedIn: Boolean(token && member),
-  isAdmin,
-  login,
-  register,
-  logout
-};
+  const value = { token, 
+    member, 
+    isLoggedIn: Boolean(token), 
+    isAdmin, 
+    login, 
+    register, 
+    logout 
+  };
   return (
     <AuthContext.Provider value={value}>
       {children}
