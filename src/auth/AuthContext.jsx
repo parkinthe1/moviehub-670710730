@@ -87,7 +87,7 @@ export function AuthProvider({ children }) {
   // };
   const value = { token, 
     member, 
-    isLoggedIn: Boolean(token), 
+    isLoggedIn: Boolean(token&& member), 
     isAdmin, 
     login, 
     register, 
