@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import MovieGrid from '../components/MovieGrid';
-import { getMovies } from '../api/backend';
+import { getMovies } from '../api/tmdb';
 // import { forget } from '../api/cache';
 
 function Movies() {
@@ -20,6 +20,11 @@ function Movies() {
       setStatus('loading');
       try {
         const list = await getMovies();            // ครั้งแรกของวันยิง API ครั้งถัดไปอ่านจาก localStorage
+
+        if (!Array.isArray(list)) {
+          throw new Error('ข้อมูลหนังจาก TMDB ไม่ใช่รายการหนัง');
+        }
+
         if (!ignore) {
           setMovies(list);
           setStatus('success');
@@ -58,8 +63,8 @@ function Movies() {
           </p>
         </div>
         <input value={query} onChange={(e) => setQuery(e.target.value)}
-               placeholder="พิมพ์ชื่อหนังเพื่อกรอง..."
-               className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-100 md:w-72" />
+          placeholder="พิมพ์ชื่อหนังเพื่อกรอง..."
+          className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 focus:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-100 md:w-72" />
       </div>
 
       {/* เมนูเลือกแนวหนัง สร้างจากข้อมูลที่มีจริง ไม่ต้องพิมพ์รายชื่อเอง */}
@@ -72,7 +77,7 @@ function Movies() {
 
       {/* ปุ่มลองใหม่ต้องล้าง cache ก่อน ไม่งั้นจะได้ของเก่าหรือ error เดิมซ้ำ */}
       <MovieGrid movies={shown} status={status} error={error}
-                 onRetry={() => {setReloadKey(k => k + 1); }} />
+        onRetry={() => { setReloadKey(k => k + 1); }} />
     </div>
   );
 }
