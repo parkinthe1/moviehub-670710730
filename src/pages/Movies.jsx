@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import MovieGrid from '../components/MovieGrid';
-import { getMovies } from '../api/tmdb';
+import { getMovies } from '../api/backend';
 // import { forget } from '../api/cache';
 
 function Movies() {
