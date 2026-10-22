@@ -1,7 +1,7 @@
 import MovieGrid from '../components/MovieGrid';
 import { useAuth } from '../auth/AuthContext';
 import { useEffect, useState } from 'react';
-import { getWishlist } from '../api/backend';
+import { getWishlist } from '../api/tmdb';
 
 // หน้า "รายการที่อยากดู" ของสมาชิกที่ login อยู่
 function Wishlist() {

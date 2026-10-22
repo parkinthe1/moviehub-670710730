@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import ReviewForm from '../components/ReviewForm';
 import ReviewList from '../components/ReviewList';
 import MovieActions from '../components/MovieActions';
-import { getMovie } from '../api/backend';
+import { getMovie } from '../api/tmdb';
 import { useAuth } from '../auth/AuthContext';
 import { getReviews, postReview } from '../api/backend';
 
